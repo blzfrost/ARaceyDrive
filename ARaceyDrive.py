@@ -9,9 +9,10 @@ display_height = 600
 
 black = (0, 0, 0)
 white = (255, 255, 255)
-red   = (255, 0, 0)
-blue  = (0, 0, 255)
+red = (255, 0, 0)
+blue = (0, 0, 255)
 green = (0, 255, 0)
+gray = (130, 130, 130)
 
 block_color = (53, 115, 255)
 
