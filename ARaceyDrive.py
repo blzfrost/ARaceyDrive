@@ -4,16 +4,21 @@ import random
 
 pygame.init()
 
-display_width = 800
-display_height = 600
+display_width = 600
+display_height = 1000
 
 black = (0, 0, 0)
+dk_gray = (60, 60, 60)
+gray = (130, 130, 130)
+lt_gray = (200, 200, 200)
 white = (255, 255, 255)
-red   = (255, 0, 0)
-blue  = (0, 0, 255)
-green = (0, 255, 0)
 
-block_color = (53, 115, 255)
+red = (255, 0, 0)
+dk_red = (130, 0, 0)
+green = (0, 255, 0)
+dr_green = (0, 130, 0)
+blue = (0, 0, 255)
+dk_blue = (0, 0, 130)
 
 car_width = 73
 
@@ -99,7 +104,7 @@ def game_loop():
         gameDisplay.fill(white)
 
         # things(thingx, thingy, thingw, thingh, color)
-        things(thing_startx, thing_starty, thing_width, thing_height, block_color)
+        things(thing_startx, thing_starty, thing_width, thing_height, dk_red)
 
         thing_starty += thing_speed
         car(x, y)
@@ -115,10 +120,10 @@ def game_loop():
             thing_speed += 1
             thing_width += (dodged * 1.2)
 
-        if y < thing_starty + thing_height:
+        if thing_starty + 5 < y < thing_starty + thing_height - 5:
             # print('y crossover')
 
-            if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
+            if thing_startx + 5 < x < thing_startx + thing_width - 5 or thing_startx + 5 < x + car_width < thing_startx + thing_width - 5:
                 # print('x crossover')
                 crash()
 
