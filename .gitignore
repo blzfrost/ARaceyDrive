@@ -1,0 +1,16 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# extensions
+#*.so
+#*.lib
+*.exp
+#*.dll
+*.xml
+*.lnk
+*.iml
+
+# Distribution / packaging
+env/
+venv/
