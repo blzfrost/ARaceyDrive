@@ -29,6 +29,24 @@ clock = pygame.time.Clock()
 carImg = pygame.image.load('ARaceyCar.png')
 
 
+class Thing:
+
+    def __init__(self, starting_x, starting_y=-600, width=50, height=50, speed=1):
+        self.x = starting_x
+        self.y = starting_y
+        self.width = width
+        self.height = height
+        self.speed = speed
+
+    def update(self):
+        dodged = False
+        self.y += self.speed
+
+        if self.y > display_height:
+            self.y = -10
+            dodged += 1
+
+
 def things_dodged(count):
     font = pygame.font.SysFont(pygame.font.get_default_font(), 25)
     text = font.render("Dodged: " + str(count), True, black)
