@@ -8,5 +8,6 @@ I'll try to figure out how to create a requirements file at some point.
 Expect a bulk of the improvements to occur during spring break.
 
 March 4th
+Added README.md to project (not just GitHub)
 fixed typo
 added colors list
