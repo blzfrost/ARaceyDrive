@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import ClassObjects
 
 pygame.init()
 
@@ -30,23 +31,77 @@ clock = pygame.time.Clock()
 
 carImg = pygame.image.load('ARaceyCar.png')
 
+game_stats = ClassObjects.CoreData
+
+class CoreData:
+    """Trying to see if I can use this to pass certain data better
+    May explode in my face! And may not be as good an idea as I thought"""
+    def __init__(self, display_width=600, display_height=1000):
+        self.display_width = display_width
+        self.display_height = display_height
+
+    class Colors:
+        red = (255, 0, 0)
+        dk_red = (130, 0, 0)
+        green = (0, 255, 0)
+        dk_green = (0, 130, 0)
+        blue = (0, 0, 255)
+        dk_blue = (0, 0, 130)
+        colors = [red, dk_red, green, dk_green, blue, dk_blue]
+
 
 class Thing:
 
-    def __init__(self, starting_x, starting_y=-600, width=50, height=50, speed=1):
+    def __init__(self, color, starting_x, starting_y=-600, width=50, height=50, speed=1):
         self.x = starting_x
         self.y = starting_y
         self.width = width
         self.height = height
         self.speed = speed
+        self.color = color
+        self.dodged = 0
 
-    def update(self):
-        dodged = False
+    def reset(self, display_width):
+        self.y = -100
+        self.x = random.randrange(display_width)
+
+    def update(self, display_height, display_width):
         self.y += self.speed
 
         if self.y > display_height:
-            self.y = -10
-            dodged += 1
+            self.y = -50 - self.height
+            self.x = random.randrange(0, display_width - self.width)
+            self.dodged += 1
+
+
+class Car:
+    """Need to work on encapsulating the movement into an update method."""
+    def __init__(self, starting_x, starting_y, width, height, speed):
+        self.x = starting_x
+        self.y = starting_y
+        self.x_change = 0
+        self.width = width
+        self.height = height
+        self.speed = speed
+
+    def get_controls(self):
+        for event in pygame.event.get():
+            if event.type == pygame.quit():
+                pygame.quit()
+                quit()
+
+            # New problem noticed. If you hold left and right, then let go of one you'll stop.
+            # I need to find a way to ensure smooth motion when things get hectic.
+            # Maybe using booleans? I'll need to figure out before this goes live
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_Left or event.key == pygame.K_a:
+                    self.x_change = -5
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    self.x_change = 5
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    x_change = 0
 
 
 def things_dodged(count):
@@ -86,11 +141,15 @@ def crash():
 
 
 def game_loop():
+    # I'll need an array or something if I want to have multiple things
+    # This way I can iterate through them
     x = (display_width * 0.45)
     y = (display_height * 0.8)
 
     x_change = 0
 
+    thing_array = []
+    thing_array.append(Thing(red))
     thing_startx = random.randrange(0, display_width)
     thing_starty = -600
     thing_speed = 4
@@ -151,6 +210,8 @@ def game_loop():
         clock.tick(60)
 
 
-game_loop()
+if __name__ == "__main__":
+    game_loop()
+
 pygame.quit()
 quit()

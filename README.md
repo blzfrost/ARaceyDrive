@@ -11,3 +11,7 @@ March 4th
 Added README.md to project (not just GitHub)
 fixed typo
 added colors list
+Tried working with classes...
+    It's slow progress
+Spent some time staring at the code...
+    Inspiration isn't my friend right tonight.
