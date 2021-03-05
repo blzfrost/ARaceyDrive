@@ -16,11 +16,13 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 dk_red = (130, 0, 0)
 green = (0, 255, 0)
-dr_green = (0, 130, 0)
+dk_green = (0, 130, 0)
 blue = (0, 0, 255)
 dk_blue = (0, 0, 130)
+colors = [red, dk_red, green, dk_green, blue, dk_blue]
 
-car_width = 73
+car_width = 29
+car_height = 40
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('A Racey Drive')
