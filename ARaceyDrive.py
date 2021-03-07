@@ -53,7 +53,7 @@ class CoreData:
 
 class Thing:
 
-    def __init__(self, colors, starting_x, starting_y=-600, width=50, height=50, speed=1):
+    def __init__(self, colors, starting_x=display_width/2, starting_y=-600, width=50, height=50, speed=1):
         self.x = starting_x
         self.y = starting_y
         self.width = width
@@ -151,7 +151,7 @@ def game_loop():
     x_change = 0
 
     thing_array = []
-    thing_array.append(Thing(red))
+    thing_array.append(Thing(ClassObjects.reds))
     thing_startx = random.randrange(0, display_width)
     thing_starty = -600
     thing_speed = 4
