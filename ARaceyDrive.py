@@ -14,13 +14,13 @@ gray = (130, 130, 130)
 lt_gray = (200, 200, 200)
 white = (255, 255, 255)
 
-red = (255, 0, 0)
+'''red = (255, 0, 0)
 dk_red = (130, 0, 0)
 green = (0, 255, 0)
 dk_green = (0, 130, 0)
 blue = (0, 0, 255)
 dk_blue = (0, 0, 130)
-colors = [red, dk_red, green, dk_green, blue, dk_blue]
+colors = [red, dk_red, green, dk_green, blue, dk_blue]'''
 
 car_width = 29
 car_height = 40
@@ -33,6 +33,7 @@ carImg = pygame.image.load('ARaceyCar.png')
 
 game_stats = ClassObjects.CoreData
 
+
 class CoreData:
     """Trying to see if I can use this to pass certain data better
     May explode in my face! And may not be as good an idea as I thought"""
@@ -40,25 +41,26 @@ class CoreData:
         self.display_width = display_width
         self.display_height = display_height
 
-    class Colors:
+    '''class Colors:
         red = (255, 0, 0)
         dk_red = (130, 0, 0)
         green = (0, 255, 0)
         dk_green = (0, 130, 0)
         blue = (0, 0, 255)
         dk_blue = (0, 0, 130)
-        colors = [red, dk_red, green, dk_green, blue, dk_blue]
+        colors = [red, dk_red, green, dk_green, blue, dk_blue]'''
 
 
 class Thing:
 
-    def __init__(self, color, starting_x, starting_y=-600, width=50, height=50, speed=1):
+    def __init__(self, colors, starting_x, starting_y=-600, width=50, height=50, speed=1):
         self.x = starting_x
         self.y = starting_y
         self.width = width
         self.height = height
         self.speed = speed
-        self.color = color
+        self.colors = colors
+        self.color = random.choice(colors)
         self.dodged = 0
 
     def reset(self, display_width):
@@ -183,7 +185,7 @@ def game_loop():
         gameDisplay.fill(white)
 
         # things(thingx, thingy, thingw, thingh, color)
-        things(thing_startx, thing_starty, thing_width, thing_height, dk_red)
+        things(thing_startx, thing_starty, thing_width, thing_height, ClassObjects.red)
 
         thing_starty += thing_speed
         car(x, y)

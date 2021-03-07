@@ -4,58 +4,102 @@ Not at all ready to move these out of the main file yet...
 """
 
 import pygame
+import random
+
+""""The answer is yes!"""
+
+# Static Data
+display_height = 1000
+display_width = 600
+
+# Colors
+black = (0, 0, 0)
+dk_gray = (60, 60, 60)
+gray = (130, 130, 130)
+lt_gray = (200, 200, 200)
+white = (255, 255, 255)
+red = (255, 0, 0)
+dk_red = (130, 0, 0)
+reds = [red, dk_red]
+green = (0, 255, 0)
+dk_green = (0, 130, 0)
+greens = [green, dk_green]
+blue = (0, 0, 255)
+dk_blue = (0, 0, 130)
+blues = [blue, dk_blue]
+
+# Dynamic Data
+score = 0
+high_score = 0  # Will need to figure out how to implement
+global_multi = 0.5
 
 
-class CoreData:
-    """Trying to see if I can use this to pass certain data better
-    May explode in my face!"""
-    def __init__(self, display_width=600, display_height=1000):
-        self.display_width = display_width
-        self.display_height = display_height
-
-    class Colors:
-        red = (255, 0, 0)
-        dk_red = (130, 0, 0)
-        green = (0, 255, 0)
-        dk_green = (0, 130, 0)
-        blue = (0, 0, 255)
-        dk_blue = (0, 0, 130)
-        colors = [red, dk_red, green, dk_green, blue, dk_blue]
-
-# Testing concept
-# It works
-# test_thing = CoreData
-# print(test_thing.Colors.red)
+def update_score():
+    global score
+    score += 1
 
 
 class Thing:
+    """The things that "block" you
+    One will be designed to grow wider
+    One will grow taller
+    And the last will grow both ways"""
+    def __init__(self, colors, t_id):
+        self.colors = colors
+        self.id = t_id
+        self.width = 50
+        self.height = 50
+        self.speed = 1
+        # self.passes = 0 # Might use to alter the speed variable
+        self.color = random.choice(colors)
+        self.x = random.randrange(int(self.width * .25), int(display_width - self.width * .75))
+        self.y = -600
 
-    def __init__(self, color, starting_x, starting_y=-600, width=50, height=50, speed=1):
-        self.x = starting_x
-        self.y = starting_y
-        self.width = width
-        self.height = height
-        self.speed = speed
-        self.color = color
+    def reset_pos(self):
+        self.y = -5 - self.height
+        self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
+        self.color = random.choice(self.colors)
+        self.speed += 1
 
-    def update(self, display_height):
-        dodged = False
-        self.y += self.speed
+    def grow(self):
+        if self.id == 1:
+            self.width += 1
+        elif self.id == 2:
+            self.height += 1
+        elif self.id == 3:
+            self.width += 1
+            self.height += 1
 
-        if self.y > display_height:  # Found a hurdle... Gonna need to figure out how to pass this properly.
-            self.y = -10
-            dodged += 1
+    def update(self, car):
+        crash = False
+        self.y += pow(self.speed, global_multi)
+
+        if self.y > display_height + 5:
+            self.reset_pos()
+            self.grow()
+            update_score()
+
+        if (self.y + 5) < car.y < (self.y + self.height - 5):
+            print("Y crossover")
+            if ((self.x + 5) < car.x < (self.x + self.width - 5)) \
+                    or ((self.x + 5) < car.x + car.width < (self.x + self.width - 5)):
+                crash = True
+                print("Crash")
+
+        return crash
 
 
 class Car:
-    """Need to work on encapsulating the movement into an update method."""
-    def __init__(self, starting_x, starting_y, width, height, speed):
-        self.x = starting_x
-        self.y = starting_y
-        self.x_change = 0
-        self.width = width
-        self.height = height
-        self.speed = speed
+    """The car object the player controls"""
+    def __init__(self):
+        self.x = display_width*0.45
+        self.y = display_height*0.8
+        self.width = 29
+        self.height = 40
+        self.speed = 5
+        self.image = pygame.image.load("ARaceyCar.png")
+        self.left = False
+        self.right = False
 
     def get_controls(self):
         for event in pygame.event.get():
@@ -65,10 +109,26 @@ class Car:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_Left or event.key == pygame.K_a:
-                    self.x_change = -5
+                    self.left = True
+                    self.right = False
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    self.x_change = 5
+                    self.left = False
+                    self.right = True
 
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    x_change = 0
+                if event.key == pygame.K_LEFT:
+                    self.left = False
+                if event.key == pygame.K_RIGHT:
+                    self.right = False
+
+    def update(self):
+        self.get_controls()
+        if self.left:
+            self.x -= pow(self.speed, global_multi)
+        if self.right:
+            self.x += pow(self.speed, global_multi)
+
+        if self.x < 0:
+            self.x = 0
+        if self.x > display_width - self.width:
+            self.x = display_width - self.width
