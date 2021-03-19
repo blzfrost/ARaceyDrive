@@ -9,13 +9,13 @@ import random
 # Static Data
 display_height = 1000
 display_width = 600
-start2 = 10
-start3 = 20
+start2 = 5  # bringing in sooner
+start3 = 15  # bringing in sooner
 
 # Dynamic Data
 score = 0
 high_score = 0  # Will need to figure out how to implement
-global_multi = 0.8
+global_multi = 0.7
 FPS = 60
 lives = 3
 
@@ -118,7 +118,7 @@ class Thing:
             self.y = y
 
     def reset_pos(self):
-        self.y = ((self.id * 5) * -1) - self.height
+        self.y = -1 - self.height  # ((self.id * 5) * -1) - self.height
         if self.id < 10:
             self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
         self.color = random.choice(self.colors)
@@ -130,7 +130,7 @@ class Thing:
         if self.id < 10:
             self.speed += self.id
         else:
-            self.speed += 1
+            self.speed += .1
 
     def grow(self):
         if self.id == 1:
@@ -144,9 +144,9 @@ class Thing:
     def update(self, car):
         is_crashed = False
         if self.id < 10:
-            self.y += pow(self.speed, global_multi)
+            self.y += int(pow(self.speed, global_multi))
         else:
-            self.y += self.speed * global_multi
+            self.y += int(self.speed * global_multi)
 
         if self.y > display_height + 5:
             self.reset_pos()

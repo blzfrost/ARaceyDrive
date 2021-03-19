@@ -7,6 +7,8 @@ import ClassObjects as CO
 pygame.init()
 game_display = pygame.display.set_mode((CO.display_width, CO.display_height))
 pygame.display.set_caption("A Racey Drive")
+pygame.mixer.music.load("Energy.mp3")
+pygame.mixer.music.play()
 clock = pygame.time.Clock()
 
 
@@ -20,7 +22,7 @@ def display_score():
 
 def message_display(text):
     """Used in the crashed screen"""
-    large_text = pygame.font.Font("georgia.ttf", 115)
+    large_text = pygame.font.SysFont("georgia", 115)
     text_surface = large_text.render(text, True, CO.black)
     text_rect = text_surface.get_rect()
     text_rect.center = ((CO.display_width/2), (CO.display_height/2))
@@ -29,13 +31,18 @@ def message_display(text):
     pygame.display.update()
 
 
-def crash():
+def crash(thing_list):
     message_display("You Can Do It")
+    for thing in thing_list:
+        thing.reset_pos()
+    CO.score = int(CO.score / 2)
+    CO.lives -= 1
     time.sleep(.5)
-    game_loop()
+    # game_loop()
 
 
 def game_loop():
+    CO.score = 0
     thing_list = [CO.Thing(CO.greens, 1)]
     line_list = []
     for i in range(11):
@@ -47,7 +54,7 @@ def game_loop():
     improvable = False
     player = CO.Car()
 
-    while not crashed:
+    while CO.lives > 0:
         # game logic
 
         # background
@@ -60,10 +67,12 @@ def game_loop():
             pygame.draw.rect(game_display, line.color, [int(line.x), int(line.y), line.width, line.height])
 
         # Thing logic
-        # move things down
+        # move things
         for thing in thing_list:
-            thing.update(player)
+            crashed = thing.update(player)
             pygame.draw.rect(game_display, thing.color, [int(thing.x), int(thing.y), thing.width, thing.height])
+            if crashed:
+                crash(thing_list)
         # adds new things at certain points
         if CO.score == CO.start2 and len(thing_list) == 1:
             thing_list.append(CO.Thing(CO.blues, 2))
