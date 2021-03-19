@@ -1,36 +1,32 @@
+# The original code from https://pythonprogramming.net/adding-score-pygame-video-game/
+# Car file and dimensions updated.
+
 import pygame
 import time
 import random
 
 pygame.init()
 
-display_width = 600
-display_height = 1000
+display_width = 800
+display_height = 600
 
 black = (0, 0, 0)
-dk_gray = (60, 60, 60)
-gray = (130, 130, 130)
-lt_gray = (200, 200, 200)
 white = (255, 255, 255)
-
 red = (255, 0, 0)
-dk_red = (130, 0, 0)
-green = (0, 255, 0)
-dr_green = (0, 130, 0)
-blue = (0, 0, 255)
-dk_blue = (0, 0, 130)
 
-car_width = 73
+block_color = (53, 115, 255)
+
+car_width = 29
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('A Racey Drive')
+pygame.display.set_caption('A bit Racey')
 clock = pygame.time.Clock()
 
-carImg = pygame.image.load('ARaceyCar.png')
+carImg = pygame.image.load('aRaceyCar.png')
 
 
 def things_dodged(count):
-    font = pygame.font.SysFont(pygame.font.get_default_font(), 25)
+    font = pygame.font.SysFont(None, 25)
     text = font.render("Dodged: " + str(count), True, black)
     gameDisplay.blit(text, (0, 0))
 
@@ -49,7 +45,7 @@ def text_objects(text, font):
 
 
 def message_display(text):
-    largeText = pygame.font.SysFont(pygame.font.get_default_font(), 115)
+    largeText = pygame.font.Font('freesansbold.ttf', 115)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = ((display_width / 2), (display_height / 2))
     gameDisplay.blit(TextSurf, TextRect)
@@ -77,7 +73,7 @@ def game_loop():
     thing_width = 100
     thing_height = 100
 
-    # thingCount = 1
+    thingCount = 1
 
     dodged = 0
 
@@ -104,7 +100,7 @@ def game_loop():
         gameDisplay.fill(white)
 
         # things(thingx, thingy, thingw, thingh, color)
-        things(thing_startx, thing_starty, thing_width, thing_height, dk_red)
+        things(thing_startx, thing_starty, thing_width, thing_height, block_color)
 
         thing_starty += thing_speed
         car(x, y)
@@ -120,11 +116,11 @@ def game_loop():
             thing_speed += 1
             thing_width += (dodged * 1.2)
 
-        if thing_starty + 5 < y < thing_starty + thing_height - 5:
-            # print('y crossover')
+        if y < thing_starty + thing_height:
+            print('y crossover')
 
-            if thing_startx + 5 < x < thing_startx + thing_width - 5 or thing_startx + 5 < x + car_width < thing_startx + thing_width - 5:
-                # print('x crossover')
+            if x > thing_startx and x < thing_startx + thing_width or x + car_width > thing_startx and x + car_width < thing_startx + thing_width:
+                print('x crossover')
                 crash()
 
         pygame.display.update()
