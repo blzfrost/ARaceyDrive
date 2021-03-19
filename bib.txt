@@ -1,0 +1,3 @@
+https://www.pygame.org/docs/ref/music.html
+https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1
+https://stackoverflow.com/questions/68645/are-static-class-variables-possible-in-python

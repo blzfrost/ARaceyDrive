@@ -93,7 +93,28 @@ class Car:
         if self.x > display_width - self.width:
             self.x = display_width - self.width
 
-        # game_display.blit(self.image, (self.x, self.y))
+
+class Divider:
+    width = 10  # Need to exp with these variables
+    height = 40
+    color = white
+    speed = 10
+
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def reset_pos(self):
+        self.y = -1 - self.height
+        if Divider.speed < 40:
+            Divider.speed += .01
+
+    def update(self):
+        self.y += int(self.speed)
+        print(Divider.speed)
+
+        if self.y > display_height + 5:
+            self.reset_pos()
 
 
 class Thing:
@@ -130,7 +151,7 @@ class Thing:
         if self.id < 10:
             self.speed += self.id
         else:
-            self.speed += .1
+            self.speed += .3
 
     def grow(self):
         if self.id == 1:
@@ -156,11 +177,11 @@ class Thing:
 
         if self.id < 10:
             if (self.y + 5) < car.y < (self.y + self.height - 5):
-                print("Y crossover")
+                # print("Y crossover")
                 if ((self.x + 5) < car.x < (self.x + self.width - 5)) \
                         or ((self.x + 5) < car.x + car.width < (self.x + self.width - 5)):
                     is_crashed = True
-                    print("Crash")
+                    # print("Crash")
 
         return is_crashed
 

@@ -35,6 +35,8 @@ def crash(thing_list):
     message_display("You Can Do It")
     for thing in thing_list:
         thing.reset_pos()
+        thing.speed = thing.speed / 2
+    CO.Divider.speed = 10
     CO.score = int(CO.score / 2)
     CO.lives -= 1
     time.sleep(.5)
@@ -46,14 +48,15 @@ def game_loop():
     thing_list = [CO.Thing(CO.greens, 1)]
     line_list = []
     for i in range(11):
-        line_list.append(CO.Thing(CO.white, 10, CO.display_width*0.2, i*97, 10, 40))
-        line_list.append(CO.Thing(CO.white, 10, CO.display_width*0.4, i*97, 10, 40))
-        line_list.append(CO.Thing(CO.white, 10, CO.display_width*0.6, i*97, 10, 40))
-        line_list.append(CO.Thing(CO.white, 10, CO.display_width*0.8, i*97, 10, 40))
+        line_list.append(CO.Divider(CO.display_width*0.2, i*97))
+        line_list.append(CO.Divider(CO.display_width*0.4, i*97))
+        line_list.append(CO.Divider(CO.display_width*0.6, i*97))
+        line_list.append(CO.Divider(CO.display_width*0.8, i*97))
     crashed = False
     improvable = False
     player = CO.Car()
 
+    # Thinking of adding an outer loop here that will deal with the reset screen
     while CO.lives > 0:
         # game logic
 
@@ -63,7 +66,7 @@ def game_loop():
         # Need to look into adding green to edges and white dividers here
         pygame.draw.rect(game_display, CO.dk_gray, [10, 0, CO.display_width - 20, CO.display_height])
         for line in line_list:
-            line.update(player)
+            line.update()
             pygame.draw.rect(game_display, line.color, [int(line.x), int(line.y), line.width, line.height])
 
         # Thing logic
