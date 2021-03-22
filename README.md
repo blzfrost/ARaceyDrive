@@ -41,11 +41,21 @@ Played with thing speed
 Started implementing lines.  
   Kind of a disaster so far.
 
-March 18th 1.5hr
+March 18th 2hr
 Bringing in things sooner.  
 Looked into lane dividers a bit. Back burner for now.    
 Looked into adding music.  
 Found a track called "Energy" from https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1  
 Changed thing 2 start from 10 to 5 and thing 3 start from 30 to 15  
 Implemented 3 lives and crash system.  
-___Need to implement a continue screen.
+___Need to implement a continue screen.  
+Fixed line dividers by making their own class.  
+
+Mar 22nt 3 hours  
+Added more crash messages  
+Randomized messages  
+Added smart logic to messages  
+Made a continue screen  
+Added optional size control argument to message_display()  
+Decreased default message_display() size  
+Implemented a persistent high score system.  
