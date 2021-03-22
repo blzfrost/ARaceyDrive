@@ -59,3 +59,4 @@ Made a continue screen
 Added optional size control argument to message_display()  
 Decreased default message_display() size  
 Implemented a persistent high score system.  
+Deleted old "Thing.py" file
