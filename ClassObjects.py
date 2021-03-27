@@ -172,15 +172,32 @@ class Thing:
         if self.id < 10:
             self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
         self.color = random.choice(self.colors)
-        # need a better way to update score
-        # self.speed += 1
-        # self.speed = score / 3
-        # self.speed = 10 + (score / 3 * self.id)
-        # self.speed = 10 + (score / 3 + pow(self.id, self.id))
         if self.id < 10:
             self.speed += self.id
         else:
             self.speed += .3
+
+    def reduce_numbers(self):
+        """Reduces size/speed during a crash event"""
+        if self.id == 1:
+            self.x /= 2
+            if self.x < 75:
+                self.x = 75
+        elif self.id == 2:
+            self.y /= 2
+            if self.y < 75:
+                self.y = 75
+        elif self.id == 3:
+            self.x /= 2
+            if self.x < 75:
+                self.x = 75
+            self.y /= 2
+            if self.y < 75:
+                self.y = 75
+
+        self.speed = self.speed / 2
+        if self.speed < 10 + self.id:
+            self.speed = 10 + self.id
 
     def grow(self):
         if self.id == 1:

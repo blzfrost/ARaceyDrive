@@ -39,30 +39,32 @@ def crash(thing_list):
     # Base messages
     base1 = "You Can Do It"
     base2 = "Keep Trying"
+    base = [base1, base2]
 
     # If almost high
     almost1 = "Almost There"
     almost2 = "You Can Do It"
+    almost3 = "So Close"
+    almost = [almost1, almost2, almost3]
 
     # If current high score
-    hs1 = "Check you out"
+    hs1 = "Check You Out"
     hs2 = "Keep Going!"
+    hs = [hs1, hs2]
 
     messages = []
     if CO.score == CO.high_score:
-        messages = [hs1, hs2]
+        messages = hs
     elif CO.score > CO.high_score - 10:
-        messages = [almost1, almost2]
+        messages = almost
     else:
-        messages = [base1, base2]
+        messages = base
 
     message_display(random.choice(messages))
     for thing in thing_list:
         thing.reset_pos()
-        thing.speed = thing.speed / 2
-        if thing.speed < 10 + thing.id:
-            thing.speed = 10 + thing.id
-    if CO.Divider.speed < 20:
+        thing.reduce_numbers()
+    if CO.Divider.speed > 20:
         CO.Divider.speed = CO.Divider.speed / 2
     else:
         CO.Divider.speed = 10
@@ -175,10 +177,11 @@ def game_loop():
                 pygame.draw.rect(game_display, thing.color, [int(thing.x), int(thing.y), thing.width, thing.height])
                 if crashed:
                     crash(thing_list)
+
             # adds new things at certain points
-            if CO.score == CO.start2 and len(thing_list) == 1:
+            if CO.score >= CO.start2 and len(thing_list) == 1:
                 thing_list.append(CO.Thing(CO.blues, 2))
-            if CO.score == CO.start3 and len(thing_list) == 2:
+            if CO.score >= CO.start3 and len(thing_list) == 2:
                 thing_list.append(CO.Thing(CO.reds, 3))
 
             # display score
