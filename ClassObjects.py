@@ -7,18 +7,24 @@ import pygame
 import random
 
 # static Data
+# some of these are fun to play with
+high_score_file = "high_score.txt"
 display_height = 1000
 display_width = 600
-start2 = 5  # bringing in sooner
-start3 = 15  # bringing in sooner
-high_score_file = "high_score.txt"
+start2 = 5  # point at which 2nt thing arrives
+start3 = 15  # point at which 3rd thing arrives
+starting_score = 0
+starting_lives = 3
+car_speed_offset = 5  # (score/car_speed_multi) + car_speed_offset
+car_speed_multi = 9  # (score/car_speed_multi) + car_speed_offset
+thing_speed_offset = 10  # Thing start
+FPS = 90
+global_multi = 0.69
 
 # dynamic Data
 score = 0
 high_score = 0
-global_multi = 0.67
-FPS = 60
-lives = 3
+lives = 0
 
 # colors
 white = (255, 255, 255)
@@ -44,6 +50,7 @@ def get_high_score():
 
 
 def update_local_high_score_from_file():
+    """Updates high score based on get_high_score"""
     global high_score
     current_hs = get_high_score()
     if current_hs is None or current_hs == "":
@@ -78,7 +85,7 @@ class Car:
         self.y = display_height*0.8
         self.width = 29
         self.height = 40
-        self.speed = 5
+        self.speed = car_speed_offset
         self.image = pygame.image.load("aRaceyCar.png")
         self.left = False
         self.right = False
@@ -86,10 +93,16 @@ class Car:
     # get controls to move player
     # if you forget the keyup you get a fun constant mover. Enhancement?
     def get_controls(self):
+        """Get the controls from user and update the proper flags"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            # Idea for alteration, single button mode.
+            # 'button' will toggle direction. Horizontal movement remains active
+
+            # Another idea, adding up and down
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -107,15 +120,18 @@ class Car:
 
     # command to update speed
     def upgrade(self):
-        self.speed += 1
+        # self.speed += 1
+        self.speed = (score / car_speed_offset) + car_speed_offset
 
     # update player position
     def update(self):
+        """Get's controls and moves car accordingly"""
         self.get_controls()
+        print("Car      ", int(self.speed), " ", int(pow(self.speed, global_multi)))       # Diagnose feature
         if self.left:
-            self.x -= pow(self.speed, global_multi)
+            self.x -= int(pow(self.speed, global_multi))
         if self.right:
-            self.x += pow(self.speed, global_multi)
+            self.x += int(pow(self.speed, global_multi))
 
         if self.x < 0:
             self.x = 0
@@ -128,18 +144,20 @@ class Divider:
     width = 10  # Need to exp with these variables
     height = 40
     color = white
-    speed = 10
+    speed = 10.0
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
 
     def reset_pos(self):
+        """Returns to top of screen"""
         self.y = -1 - self.height
         if Divider.speed < 40:
             Divider.speed += .01
 
     def update(self):
+        """Moves divider"""
         self.y += int(self.speed)
         # print(Divider.speed)
 
@@ -157,32 +175,37 @@ class Thing:
         self.id = t_id
         self.width = width     # Need to exp with these variables
         self.height = height
-        self.speed = 10 + self.id
-        # self.passes = 0 # Might use to alter the speed variable
+        self.speed = int(thing_speed_offset + self.id + score / 3)  # adds extra speed if someone starts ahead
         self.color = random.choice(self.colors)
-        if self.id < 10:
-            self.x = random.randrange(int(self.width * .25), int(display_width - self.width * .75))
-            self.y = - 10 - self.height
-        else:
-            self.x = x
-            self.y = y
+        self.x = random.randrange(int(self.width * .25), int(display_width - self.width * .75))
+        self.y = - 10 - self.height
+
+        if self.id == 1 or self.id == 3:  # adds extra thicccness if someone starts at a higher score.
+            self.width += score / 3
+        if self.id == 2 or self.id == 3:
+            self.height += score / 3
 
     def reset_pos(self):
-        self.y = -1 - self.height  # ((self.id * 5) * -1) - self.height
-        if self.id < 10:
-            self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
+        """Resets pos to top of screen, changes color, and updates speed"""
+        self.y = -1 - self.height
+        self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
         self.color = random.choice(self.colors)
-        # need a better way to update score
-        # self.speed += 1
-        # self.speed = score / 3
-        # self.speed = 10 + (score / 3 * self.id)
-        # self.speed = 10 + (score / 3 + pow(self.id, self.id))
-        if self.id < 10:
-            self.speed += self.id
-        else:
-            self.speed += .3
+        self.speed += self.id
+
+    def reduce_numbers(self):
+        """Reduces size/speed during a crash event"""
+        if self.id == 1:
+            self.width = (self.width + 75) / 2
+        elif self.id == 2:
+            self.height = (self.height + 75) / 2
+        elif self.id == 3:
+            self.width = (self.width + 75) / 2
+            self.height = (self.height + 75) / 2
+
+        self.speed = int((self.speed + thing_speed_offset + self.id) / 2)
 
     def grow(self):
+        """Causes the increase of height or width based on ID"""
         if self.id == 1:
             self.width += 1
         elif self.id == 2:
@@ -192,25 +215,25 @@ class Thing:
             self.height += 1
 
     def update(self, car):
+        """Updates thing position, checks if below bottom of screen or overlaps with car position"""
         is_crashed = False
-        if self.id < 10:
-            self.y += int(pow(self.speed, global_multi))
-        else:
-            self.y += int(self.speed * global_multi)
+        print("Thing", self.id, " ", int(self.speed), " ", int(pow(self.speed, global_multi)))  # Diagnosis
+        self.y += int(pow(self.speed, global_multi))
 
+        # checks if below screen. resets pos, increases size, increases score if it is
         if self.y > display_height + 5:
             self.reset_pos()
             if self.id < 10:
                 self.grow()
                 update_score()
 
+        # checks if crash has occurred
         if self.id < 10:
             if (self.y + 5) < car.y < (self.y + self.height - 5):
-                # print("Y crossover")
                 if ((self.x + 5) < car.x < (self.x + self.width - 5)) \
                         or ((self.x + 5) < car.x + car.width < (self.x + self.width - 5)):
                     is_crashed = True
-                    # print("Crash")
 
+        # ends with result of crash
         return is_crashed
 

@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 
 
 def display_score():
+    """Display relevant data in top right"""
     font = pygame.font.SysFont("georgia", 25)
     text1 = font.render("High Score: " + str(CO.high_score), True, CO.white)
     text2 = font.render("Dodged:     " + str(CO.score), True, CO.white)
@@ -39,30 +40,32 @@ def crash(thing_list):
     # Base messages
     base1 = "You Can Do It"
     base2 = "Keep Trying"
+    base = [base1, base2]
 
     # If almost high
     almost1 = "Almost There"
     almost2 = "You Can Do It"
+    almost3 = "So Close"
+    almost = [almost1, almost2, almost3]
 
     # If current high score
-    hs1 = "Check you out"
+    hs1 = "Check You Out"
     hs2 = "Keep Going!"
+    hs = [hs1, hs2]
 
     messages = []
     if CO.score == CO.high_score:
-        messages = [hs1, hs2]
+        messages = hs
     elif CO.score > CO.high_score - 10:
-        messages = [almost1, almost2]
+        messages = almost
     else:
-        messages = [base1, base2]
+        messages = base
 
     message_display(random.choice(messages))
     for thing in thing_list:
         thing.reset_pos()
-        thing.speed = thing.speed / 2
-        if thing.speed < 10 + thing.id:
-            thing.speed = 10 + thing.id
-    if CO.Divider.speed < 20:
+        thing.reduce_numbers()
+    if CO.Divider.speed > 20:
         CO.Divider.speed = CO.Divider.speed / 2
     else:
         CO.Divider.speed = 10
@@ -127,8 +130,8 @@ def game_loop():
 
     while keep_playing:  # Outer loop for continue screen
         # sets base GAME variables
-        CO.score = 0
-        CO.lives = 3
+        CO.score = CO.starting_score
+        CO.lives = CO.starting_lives
         keep_playing = True
         improvable = False
 
@@ -175,10 +178,11 @@ def game_loop():
                 pygame.draw.rect(game_display, thing.color, [int(thing.x), int(thing.y), thing.width, thing.height])
                 if crashed:
                     crash(thing_list)
+
             # adds new things at certain points
-            if CO.score == CO.start2 and len(thing_list) == 1:
+            if CO.score >= CO.start2 and len(thing_list) == 1:
                 thing_list.append(CO.Thing(CO.blues, 2))
-            if CO.score == CO.start3 and len(thing_list) == 2:
+            if CO.score >= CO.start3 and len(thing_list) == 2:
                 thing_list.append(CO.Thing(CO.reds, 3))
 
             # display score
@@ -186,11 +190,7 @@ def game_loop():
 
             # player logic
             # check for speed increase
-            if improvable and CO.score % 10 == 0:
-                player.upgrade()
-                improvable = False
-            if CO.score % 10 == 1:
-                improvable = True
+            player.upgrade()
             # update player pos
             player.update()
             game_display.blit(player.image, (player.x, player.y))
