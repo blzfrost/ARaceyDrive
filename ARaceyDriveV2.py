@@ -15,6 +15,7 @@ clock = pygame.time.Clock()
 
 
 def display_score():
+    """Display relevant data in top right"""
     font = pygame.font.SysFont("georgia", 25)
     text1 = font.render("High Score: " + str(CO.high_score), True, CO.white)
     text2 = font.render("Dodged:     " + str(CO.score), True, CO.white)
@@ -129,8 +130,8 @@ def game_loop():
 
     while keep_playing:  # Outer loop for continue screen
         # sets base GAME variables
-        CO.score = 0
-        CO.lives = 3
+        CO.score = CO.starting_score
+        CO.lives = CO.starting_lives
         keep_playing = True
         improvable = False
 
@@ -189,11 +190,7 @@ def game_loop():
 
             # player logic
             # check for speed increase
-            if improvable and CO.score % 10 == 0:
-                player.upgrade()
-                improvable = False
-            if CO.score % 10 == 1:
-                improvable = True
+            player.upgrade()
             # update player pos
             player.update()
             game_display.blit(player.image, (player.x, player.y))

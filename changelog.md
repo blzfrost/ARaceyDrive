@@ -63,4 +63,8 @@ Deleted old "Thing.py" file
 
 Mar 26  
 Renamed this document to changelog.md  
-Created Readme that actually describes the program and offers instructions on how to play.  
+Created Readme that actually describes the program and offers instructions on how to play  
+Added reduce_numbers to Thing class to manage speed and size after crash  
+Updated Car upgrade method  
+Balanced several values  
+Cleaned up code
