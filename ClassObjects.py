@@ -9,8 +9,8 @@ import random
 # static Data
 # some of these are fun to play with
 high_score_file = "high_score.txt"
-display_height = 1000
-display_width = 600
+display_height = 800
+display_width = 500
 start2 = 5  # point at which 2nt thing arrives
 start3 = 15  # point at which 3rd thing arrives
 starting_score = 0
@@ -19,7 +19,7 @@ car_speed_offset = 5  # (score/car_speed_multi) + car_speed_offset
 car_speed_multi = 9  # (score/car_speed_multi) + car_speed_offset
 thing_speed_offset = 10  # Thing start
 FPS = 90
-global_multi = 0.69
+global_multi = 0.69  # affects top speed and growth curve
 
 # dynamic Data
 score = 0
@@ -32,15 +32,18 @@ black = (0, 0, 0)
 dk_gray = (60, 60, 60)
 gray = (130, 130, 130)
 lt_gray = (200, 200, 200)
+lt_red = (255, 100, 100)
 red = (255, 0, 0)
 dk_red = (130, 0, 0)
-reds = [red, dk_red]
+reds = [red, dk_red, lt_red]
+lt_green = (100, 255, 100)
 green = (0, 255, 0)
 dk_green = (0, 130, 0)
-greens = [green, dk_green]
+greens = [green, dk_green, lt_green]
+lt_blue = (100, 100, 255)
 blue = (0, 0, 255)
 dk_blue = (0, 0, 130)
-blues = [blue, dk_blue]
+blues = [blue, dk_blue, lt_blue]
 
 
 def get_high_score():
@@ -127,7 +130,7 @@ class Car:
     def update(self):
         """Get's controls and moves car accordingly"""
         self.get_controls()
-        print("Car      ", int(self.speed), " ", int(pow(self.speed, global_multi)))       # Diagnose feature
+        # print("Car      ", int(self.speed), " ", int(pow(self.speed, global_multi)))       # Diagnose feature
         if self.left:
             self.x -= int(pow(self.speed, global_multi))
         if self.right:
@@ -141,10 +144,10 @@ class Car:
 
 class Divider:
     """Lane divider logic"""
-    width = 10  # Need to exp with these variables
-    height = 40
+    width = int(display_width / 60)  # Need to exp with these variables
+    height = int(display_height / 40)
     color = white
-    speed = 10.0
+    speed = int(display_height / 100)
 
     def __init__(self, x, y):
         self.x = x
@@ -153,8 +156,9 @@ class Divider:
     def reset_pos(self):
         """Returns to top of screen"""
         self.y = -1 - self.height
+        print(Divider.speed)
         if Divider.speed < 40:
-            Divider.speed += .01
+            Divider.speed += .025
 
     def update(self):
         """Moves divider"""
@@ -187,7 +191,7 @@ class Thing:
 
     def reset_pos(self):
         """Resets pos to top of screen, changes color, and updates speed"""
-        self.y = -1 - self.height
+        self.y = int(display_height / 4 * -1) - self.height
         self.x = random.randrange(int(self.width*.25), int(display_width - self.width * .75))
         self.color = random.choice(self.colors)
         self.speed += self.id
@@ -217,7 +221,7 @@ class Thing:
     def update(self, car):
         """Updates thing position, checks if below bottom of screen or overlaps with car position"""
         is_crashed = False
-        print("Thing", self.id, " ", int(self.speed), " ", int(pow(self.speed, global_multi)))  # Diagnosis
+        # print("Thing", self.id, " ", int(self.speed), " ", int(pow(self.speed, global_multi)))  # Diagnosis
         self.y += int(pow(self.speed, global_multi))
 
         # checks if below screen. resets pos, increases size, increases score if it is

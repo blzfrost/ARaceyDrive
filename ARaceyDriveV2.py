@@ -9,7 +9,7 @@ pygame.init()
 game_display = pygame.display.set_mode((CO.display_width, CO.display_height))
 pygame.display.set_caption("A Racey Drive")
 pygame.mixer.music.load("Energy.mp3")
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play()
 clock = pygame.time.Clock()
 
@@ -25,7 +25,7 @@ def display_score():
     game_display.blit(text3, (0, 40))
 
 
-def message_display(text, size=85):
+def message_display(text, size=75):
     """Used in the crashed screen"""
     large_text = pygame.font.SysFont("georgia", size)
     text_surface = large_text.render(text, True, CO.black)
@@ -142,10 +142,10 @@ def game_loop():
         # Lane dividers
         line_list = []
         for i in range(11):
-            line_list.append(CO.Divider(CO.display_width*0.2, i*97))
-            line_list.append(CO.Divider(CO.display_width*0.4, i*97))
-            line_list.append(CO.Divider(CO.display_width*0.6, i*97))
-            line_list.append(CO.Divider(CO.display_width*0.8, i*97))
+            line_list.append(CO.Divider(CO.display_width*0.2, i*int(CO.display_height/10.5)))
+            line_list.append(CO.Divider(CO.display_width*0.4, i*int(CO.display_height/10.5)))
+            line_list.append(CO.Divider(CO.display_width*0.6, i*int(CO.display_height/10.5)))
+            line_list.append(CO.Divider(CO.display_width*0.8, i*int(CO.display_height/10.5)))
 
         while CO.lives > 0:  # Inner loop for game
             # game logic
