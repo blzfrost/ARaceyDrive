@@ -8,14 +8,16 @@ import ClassObjects as CO
 pygame.init()
 game_display = pygame.display.set_mode((CO.display_width, CO.display_height))
 pygame.display.set_caption("A Racey Drive")
-pygame.mixer.music.load("Energy.mp3")
-pygame.mixer.music.set_volume(0.1)
+# Thank you Scott Holmes Music.
+#  Track found at https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1
+pygame.mixer.music.load("ARaceyDrive/Resources/Energy.mp3")
+pygame.mixer.music.set_volume(0.1)  # REMEMBER THIS! Almost blasted my ears out with it at full.
 pygame.mixer.music.play()
 clock = pygame.time.Clock()
 
 
 def display_score():
-    """Display relevant data in top right"""
+    """Display relevant data in top left"""
     font = pygame.font.SysFont("georgia", 25)
     text1 = font.render("High Score: " + str(CO.high_score), True, CO.white)
     text2 = font.render("Dodged:     " + str(CO.score), True, CO.white)
@@ -26,7 +28,7 @@ def display_score():
 
 
 def message_display(text, size=75):
-    """Used in the crashed screen"""
+    """Used to display messages in the middle of the screen"""
     large_text = pygame.font.SysFont("georgia", size)
     text_surface = large_text.render(text, True, CO.black)
     text_rect = text_surface.get_rect()
@@ -53,6 +55,7 @@ def crash(thing_list):
     hs2 = "Keep Going!"
     hs = [hs1, hs2]
 
+    # Decides what message block to use based on distance from score
     messages = []
     if CO.score == CO.high_score:
         messages = hs
@@ -62,15 +65,20 @@ def crash(thing_list):
         messages = base
 
     message_display(random.choice(messages))
+
+    # reduces speed and size of things
     for thing in thing_list:
         thing.reset_pos()
         thing.reduce_numbers()
-    if CO.Divider.speed > 20:
-        CO.Divider.speed = CO.Divider.speed / 2
-    else:
-        CO.Divider.speed = 10
+    # resets divider speed to you can feel the velocity
+    CO.Divider.speed = int(CO.display_height / 100)
+    # cuts score in half
     CO.score = int(CO.score / 2)
+    # reduces lives
     CO.lives -= 1
+    # pauses so you can read the message
+    # but not for long
+    # you want to get people back in the action
     time.sleep(.5)
 
 
@@ -78,10 +86,11 @@ def continue_screen():
     to_continue = True
     keep_playing = True
 
-    # Display Encouragement
+    # display Encouragement
+    # changes based on distance from high score
     game_display.fill(CO.lt_gray)
     if CO.score == CO.high_score:
-        message_display("Great Run")
+        message_display("Try Again")
     elif CO.score > CO.high_score - 10:
         message_display("So Close")
     elif CO.score > CO.high_score - 25:
@@ -99,13 +108,13 @@ def continue_screen():
 
     # display high score
     game_display.fill(CO.lt_gray)
-    message_display("High Score: " + str(CO.high_score), 80)
+    message_display("High Score: " + str(CO.high_score), 70)
     time.sleep(.75)
 
     while to_continue:
         # prompt for continue
         game_display.fill(CO.lt_gray)
-        message_display("Continue? (y/n)", 75)
+        message_display("Continue? (y/n)", 65)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -128,18 +137,16 @@ def game_loop():
     keep_playing = True
     CO.update_local_high_score_from_file()
 
-    while keep_playing:  # Outer loop for continue screen
+    while keep_playing:  # Outer loop for continue screen and to set starting conditions
         # sets base GAME variables
         CO.score = CO.starting_score
         CO.lives = CO.starting_lives
-        keep_playing = True
-        improvable = False
 
-        # starter pieces
+        # creates starter pieces
         player = CO.Car()
         thing_list = [CO.Thing(CO.greens, 1)]
 
-        # Lane dividers
+        # lane dividers
         line_list = []
         for i in range(11):
             line_list.append(CO.Divider(CO.display_width*0.2, i*int(CO.display_height/10.5)))
@@ -148,10 +155,9 @@ def game_loop():
             line_list.append(CO.Divider(CO.display_width*0.8, i*int(CO.display_height/10.5)))
 
         while CO.lives > 0:  # Inner loop for game
-            # game logic
+            # Background logic
+            # display background based on score
             stage = int(CO.score / 50)
-
-            # display background
             if stage == 0:
                 game_display.fill(CO.dk_green)
             elif stage == 1:
@@ -165,8 +171,10 @@ def game_loop():
             elif stage > 4:
                 game_display.fill(CO.red)
 
-            # Need to look into adding green to edges and white dividers here
+            # draws track
             pygame.draw.rect(game_display, CO.dk_gray, [10, 0, CO.display_width - 20, CO.display_height])
+
+            # displays white dividers
             for line in line_list:
                 line.update()
                 pygame.draw.rect(game_display, line.color, [int(line.x), int(line.y), line.width, line.height])
@@ -174,21 +182,25 @@ def game_loop():
             # Thing logic
             # move things
             for thing in thing_list:
+                # updates pos and checks for crash
                 crashed = thing.update(player)
-                pygame.draw.rect(game_display, thing.color, [int(thing.x), int(thing.y), thing.width, thing.height])
                 if crashed:
+                    # Adjusts score and sizes
                     crash(thing_list)
+                else:
+                    # draws thing in new pos
+                    pygame.draw.rect(game_display, thing.color, [int(thing.x), int(thing.y), thing.width, thing.height])
 
-            # adds new things at certain points
+            # adds new things at certain thresholds
             if CO.score >= CO.start2 and len(thing_list) == 1:
                 thing_list.append(CO.Thing(CO.blues, 2))
             if CO.score >= CO.start3 and len(thing_list) == 2:
                 thing_list.append(CO.Thing(CO.reds, 3))
 
-            # display score
+            # display score (it's here so it remains on top of the things)
             display_score()
 
-            # player logic
+            # Player logic
             # check for speed increase
             player.upgrade()
             # update player pos
@@ -199,7 +211,7 @@ def game_loop():
             pygame.display.update()
             clock.tick(CO.FPS)
 
-        """Continue screen"""
+        # once you lose all lives you'll reach the continue screen
         keep_playing = continue_screen()
 
 
