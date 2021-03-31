@@ -10,7 +10,7 @@ game_display = pygame.display.set_mode((CO.display_width, CO.display_height))
 pygame.display.set_caption("A Racey Drive")
 # Thank you Scott Holmes Music.
 #  Track found at https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1
-pygame.mixer.music.load("ARaceyDrive/Resources/Energy.mp3")
+pygame.mixer.music.load("Resources/Energy.mp3")
 pygame.mixer.music.set_volume(0.1)  # REMEMBER THIS! Almost blasted my ears out with it at full.
 pygame.mixer.music.play()
 clock = pygame.time.Clock()

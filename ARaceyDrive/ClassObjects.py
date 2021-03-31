@@ -8,7 +8,7 @@ import random
 
 # static Data
 # some of these are fun to play with
-high_score_file = "ARaceyDrive/high_score.txt"
+high_score_file = "high_score.txt"
 display_height = 800
 display_width = 500
 start2 = 5  # point at which 2nt thing arrives
@@ -90,7 +90,7 @@ class Car:
         self.width = 29  # based on png, a little smaller
         self.height = 40  # based on png, a little smaller
         self.speed = car_speed_offset
-        self.image = pygame.image.load("ARaceyDrive/Resources/aRaceyCar.png")
+        self.image = pygame.image.load("Resources/aRaceyCar.png")
         self.left = False
         self.right = False
 

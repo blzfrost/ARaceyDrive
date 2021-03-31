@@ -80,3 +80,4 @@ added colors
 worked on thing y reset_pos method  
 Updated Readme.md  
 Restructured the entire file structure for presentation  
+Fixed bug
