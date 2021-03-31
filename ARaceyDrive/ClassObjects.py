@@ -48,8 +48,11 @@ blues = [blue, dk_blue, lt_blue]
 
 def get_high_score():
     """Get high score from file"""
-    with open(high_score_file, 'r') as hs_txt:
-        return int(hs_txt.read())
+    try:
+        with open(high_score_file, 'r') as hs_txt:
+            return int(hs_txt.read())
+    except FileNotFoundError:
+        return 0
 
 
 def update_local_high_score_from_file():

@@ -14,7 +14,7 @@ try:
     pygame.mixer.music.load("Resources/Energy.mp3")
     pygame.mixer.music.set_volume(0.1)  # REMEMBER THIS! Almost blasted my ears out with it at full.
     pygame.mixer.music.play()
-except:
+except C:
     print("An exception occurred during music playback.th music. Sorry.")
 clock = pygame.time.Clock()
 
