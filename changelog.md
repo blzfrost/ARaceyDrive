@@ -45,7 +45,9 @@ March 18th 2hr
 Bringing in things sooner.  
 Looked into lane dividers a bit. Back burner for now.    
 Looked into adding music.  
-Found a track called "Energy" from https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1  
+Found a track called "Energy" from 
+> https://freemusicarchive.org/music/Scott_Holmes/media-music-mix/energy-1  
+
 Changed thing 2 start from 10 to 5 and thing 3 start from 30 to 15  
 Implemented 3 lives and crash system.  
 ___Need to implement a continue screen.  
@@ -61,10 +63,20 @@ Decreased default message_display() size
 Implemented a persistent high score system  
 Deleted old "Thing.py" file  
 
-Mar 26  
+Mar 26  2 hours
 Renamed this document to changelog.md  
 Created Readme that actually describes the program and offers instructions on how to play  
 Added reduce_numbers to Thing class to manage speed and size after crash  
 Updated Car upgrade method  
 Balanced several values  
 Cleaned up code
+
+Mar 30 2 hr
+Tweaks and balancing  
+Shrunk resolution  
+Worked on making the dividers adjust with screen size  
+Drastically reduced volume. From .5 - .1  
+added colors  
+worked on thing y reset_pos method  
+Updated Readme.md  
+Restructured the entire file structure for presentation  
